@@ -13,7 +13,7 @@
     "d": "./node_modules/.bin/http-server -p=3333 -o"
   },
   "author": "Julien Etienne",
-  "license": "MIT",
+  "license": "Apache-3.0",
   "dependencies": {
     "entities": "^4.5.0",
     "htmlparser2": "^9.1.0"
