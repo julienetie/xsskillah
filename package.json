@@ -9,7 +9,8 @@
     "copy:parser": "cp node_modules/htmlparser2/lib/esm/Parser.js  libs/",
     "copy:tokenizer": "cp node_modules/htmlparser2/lib/esm/Tokenizer.js  libs/",
     "copy:libs": "npm run copy:parser && npm run copy:tokenizer",
-    "make:parser": "npm run copy:libs && rollup -c ./setup/rollup.config.libs.js"
+    "make:parser": "npm run copy:libs && rollup -c ./setup/rollup.config.libs.js",
+    "d": "./node_modules/.bin/http-server -p=3333 -o"
   },
   "author": "Julien Etienne",
   "license": "MIT",
@@ -18,6 +19,7 @@
     "htmlparser2": "^9.1.0"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^15.2.3"
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "http-server": "^14.1.1"
   }
 }
