@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parser</title>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sanitize-html/1.27.1/sanitize-html-es2015.min.js"></script> -->
+</head>
+
+<body>
+    <script type="module">
+        import { Parser } from './html-parser-2.js'
+        import inputHTML from './input-html.js'
+        // import * as sanitizeHtml from  'https://cdnjs.cloudflare.com/ajax/libs/sanitize-html/1.27.1/sanitize-html-es2015.min.js'
+        const empty = ''
+        let output = empty
+
+
+
+        const SAFE_URL_PATTERN = /^(?!javascript:)(?:[a-z0-9+.-]+:|[^&:\/?#]*(?:[\/?#]|$))/i;
+
+        const sanitizeUrl = url => {
+            url = String(url);
+            return url.match(SAFE_URL_PATTERN) ? url : 'unsafe:' + url;
+        };
+
+        // For Start-with comparision 
+        const dangerousAttributes = ['href', 'src', 'srcset', 'style', 'background', 'action', 'formaction', 'xmlns']
+        const dangerousTags = [
+            'script',
+            'iframe',
+            'object',
+            'embed',
+            'meta',
+            'base',
+            'style',
+            'canvas',
+            'link',
+            'marquee',
+            'applet',
+            'frame',
+            'frameset'
+        ]
+        let count = -1
+        let textId
+        let textReg = new Map()
+        const parser = new Parser({
+            onopentag(name, attributes) {
+                if (dangerousTags.includes(name)) return
+
+                let stringAttributes = empty
+                for (let [key, value] of Object.entries(attributes)) {
+                    // Dangerous inputs
+                    if (name === 'input' && key === 'type' && value.includes('javascript')) return
+                    // Action disabled by default
+                    if (name === 'form' && key === 'action') return
+
+                    // Remove all events | stray double quotes | stray single quotes 
+                    if (key.startsWith('on') || key.startsWith('"') || key.startsWith('\'')) continue
+
+                    // Sanitize dangerous attributes
+                    if (dangerousAttributes.includes(key) || key.startsWith('data-')) {
+                        value = sanitizeUrl(value)
+                    }
+
+                    if (value === empty) {
+                        stringAttributes += `${key} `
+                    } else {
+                        stringAttributes += `${key}="${value}" `
+                    }
+                }
+                output += `<${name} ${stringAttributes}>`
+            },
+            ontext(text) {
+                count++
+                textId = Math.floor(performance.now()) + count
+
+                /*
+                 * Fires whenever a section of text was processed.
+                 *
+                 * Note that this can fire at any point within text and you might
+                 * have to stitch together multiple pieces.
+                 */
+
+                // if(count < 35){
+                const id = `text-${textId}`
+                textReg.set(id, text)
+                output += `<span id="${id}"></span>`
+                // }
+
+            },
+            onclosetag(name) {
+                if (name === 'script' || name === 'iframe') return
+                /*
+                 * Fires when a tag is closed.
+                 *
+                 * You can rely on this event only firing when you have received an
+                 * equivalent opening tag before. Closing tags without corresponding
+                 * opening tags will be ignored.
+                 */
+                output += `</${name}>`
+                // if (tagname === "script") {
+                //     console.log("That's it?!");
+                // }
+            },
+        });
+        console.time('@')
+        parser.write(inputHTML)
+        parser.end()
+        // console.log(output)
+        // console.log(textReg)
+
+        document.body.insertAdjacentHTML('afterbegin', output)
+        for (let [key, value] of textReg) {
+            // console.log(key)
+            const span = document.querySelector(`#${key}`)
+            if (span) {
+                span.insertAdjacentText('beforebegin', value)
+                span.remove()
+            }
+        }
+        console.timeEnd('@')
+        // console.log(document.body.innerHTML)
+
+        // console.time('sanitize-html')
+        // const clean = sanitizeHtml(inputHTML)
+        // document.body.insertAdjacentHTML('afterbegin', clean)
+        // console.timeEnd('sanitize-html')
+    </script>
+</body>
+
+</html>
