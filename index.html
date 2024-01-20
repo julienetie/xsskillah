@@ -7,13 +7,39 @@
 </head>
 <body>
     <h1>ParserBy</h1>
+    <template>
+        <div class="some-class" id="abc" style="color:red;" onload="alert(1)">
+            <h1>TEST</h1>
+            <script>
+                alert(2)
+            </script>
 
+            <input type="textjavascript" value="YO TEST 123" >
+
+            <form action="balbla.php">
+                <input type="text" value="THIS IS A FORM">
+            </form>
+
+            <section  `how are you`>
+
+            </section>
+            <img src="/" onerror="javascript:alert(1)"></div>
+        </div>
+    </template>
 
 
     <script type="module">
         import parserby from './src/parserby.js'
 
-        console.log('parserby', parserby)
+        const inputHTML = document.querySelector('template')
+
+        const output = parserby(inputHTML.innerHTML, {
+            outputType: 'html',
+            allowTags: ['script'],
+            allowTagRules: ['strayBackTicks']
+        })
+
+        document.body.insertAdjacentElement('afterbegin', output)
     </script>
 </body>
 </html>
