@@ -13,4 +13,4 @@ In theory, there shouldn't be any restrictions on what can be rendered. Script t
 ### API
 To be announced (TBA)
 
-Apache 3.0 © Julien Etienne 2024
+MIT © Julien Etienne 2024

@@ -14,7 +14,7 @@
     "lint": "./node_modules/.bin/eslint --fix ./src/"
   },
   "author": "Julien Etienne",
-  "license": "Apache-3.0",
+  "license": "MIT",
   "dependencies": {
     "entities": "^4.5.0",
     "htmlparser2": "^9.1.0"
