@@ -1,3 +1,8 @@
+// RESOURCE_URL
+
+
+
+
 /* 
 We use htmlparser2 for parsing HTML openingTags, text and closingTags.
 - 
@@ -61,7 +66,7 @@ const globalDefaults = {
     */
 }
 
-const parserby = (input, instanceOptions, globalOptions) => {
+const xsskillah = (input, instanceOptions, globalOptions) => {
     /*
     Instance Options > Global Options > Global Defaults */
     const allowTags = instanceOptions?.allowTags || globalOptions?.allowTags || globalDefaults.allowTags
@@ -173,4 +178,4 @@ const parserby = (input, instanceOptions, globalOptions) => {
     return template.firstElementChild.firstElementChild
 }
 
-export default parserby
+export default xsskillah
