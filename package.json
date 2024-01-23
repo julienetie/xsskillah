@@ -2,8 +2,12 @@
   "name": "xsskillah",
   "version": "0.1.1",
   "description": "A Fast Minimal HTML Sanitizer",
-  "main": "index.js",
+  "main": "./dist/xsskillah.js",
   "type": "module",
+  "exports": {
+    "import": "./dist/xsskillah.js",
+    "require": "./dist/xsskillah.cjs"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "copy:parser": "cp node_modules/htmlparser2/lib/esm/Parser.js  libs/",
