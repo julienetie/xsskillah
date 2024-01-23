@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ParserBy</title>
+    <title>XssKillah</title>
 </head>
 <body>
-    <h1>ParserBy</h1>
+    <h1>XssKillah</h1>
+
+    <!-- Test template which will be used as a string -->
     <template>
         <div class="some-class" id="abc" style="color:red;" onload="alert(1)">
             <h1>TEST</h1>
@@ -19,21 +21,32 @@
             <form action="balbla.php">
                 <input type="text" value="THIS IS A FORM">
             </form>
-
+            <!-- This is a comment -->
+            <p>
+                This is text alert(5)
+            </p>
+            <!-- 
+            This is another comment
+            With mutli lines 
+            123 -->
+            <script>
+                Script text
+            </script>
             <section  `how are you`>
-
+                This is some text 
             </section>
             <img src="/" onerror="javascript:alert(1)"></div>
         </div>
     </template>
+    <!-- End of test template -->
 
 
     <script type="module">
-        import parserby from './src/parserby.js'
+        import xsskillah from './src/xsskillah.js'
 
         const inputHTML = document.querySelector('template')
 
-        const output = parserby(inputHTML.innerHTML, {
+        const output = xsskillah(inputHTML.innerHTML, {
             outputType: 'html',
             allowTags: ['script'],
             allowTagRules: ['strayBackTicks']
