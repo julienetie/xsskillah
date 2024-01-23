@@ -1,10 +1,10 @@
 import fs from 'fs/promises'
 import path, { dirname } from 'path'
 import { minify } from 'terser'
-import { execSync } from 'child_process'
+// import { execSync } from 'child_process'
 import resolve from '@rollup/plugin-node-resolve'
 import { rollup } from 'rollup'
-// import brotliSize from 'brotli-size'
+import brotliSize from 'brotli-size'
 
 const name = 'xsskillah'
 
@@ -53,7 +53,7 @@ const createCJS = async () => {
     const data = code
     // const data = await fs.readFile(paths.source, 'utf8')
     // const tsDefData = await fs.readFile(paths.sourceTSdef, 'utf8')
-    // const readmeSrc = await fs.readFile(paths.readmeSrc, 'utf8')
+    const readmeSrc = await fs.readFile(paths.readmeSrc, 'utf8')
    
     const insertCJSImport = data.replace(new RegExp(`export default ${name}`, 'g'), `module.exports = ${name}`)
 
@@ -109,14 +109,14 @@ const createCJS = async () => {
     const stats = await fs.stat(paths.esMinDist)
 
     // Readme
-    // const brotliSizeBytes = brotliSize.sync(minifiedESData.code)
-    // const fileSizeInKB = stats.size / 1024
+    const brotliSizeBytes = brotliSize.sync(minifiedESData.code)
+    const fileSizeInKB = stats.size / 1024
 
-    // const readmeWithSize = readmeSrc
-    //   .replace(/{{ size }}/g, `${fileSizeInKB.toFixed(2)}KB`)
-    //   .replace(/{{ brotliSize }}/g, `${brotliSizeBytes} bytes`)
-    // await fs.writeFile(paths.readmeRoot, readmeWithSize, 'utf8')
-    // console.info(`Created ${paths.readmeRoot}`)
+    const readmeWithSize = readmeSrc
+      .replace(/{{ size }}/g, `${fileSizeInKB.toFixed(2)}KB`)
+      .replace(/{{ brotliSize }}/g, `${brotliSizeBytes} bytes`)
+    await fs.writeFile(paths.readmeRoot, readmeWithSize, 'utf8')
+    console.info(`Created ${paths.readmeRoot}`)
   } catch (err) {
     console.error('Error:', err)
   }
