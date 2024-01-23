@@ -4,7 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 export default {
     input: './src/xsskillah.js',
     output: {
-      file: './dist/xsskillah.js',
+      file: './xsskillah.js',
       format: 'es',
       sourcemap: false,
     },
