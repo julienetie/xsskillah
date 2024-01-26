@@ -46,13 +46,42 @@
 
         const inputHTML = document.querySelector('template')
 
-        const output = xsskillah(inputHTML.innerHTML, {
+        const xss = xsskillah()
+
+        const output1 = xss(inputHTML.innerHTML, {
             outputType: 'html',
             allowTags: ['script'],
             allowTagRules: ['strayBackTicks']
         })
 
-        document.body.insertAdjacentElement('afterbegin', output)
+        const output2 = xss(inputHTML.innerHTML, {
+            outputType: 'html',
+            allowTags: ['script'],
+            allowTagRules: ['strayBackTicks']
+        })
+
+        const output3 = xss(inputHTML.innerHTML, {
+            outputType: 'html',
+            allowTags: ['script'],
+            allowTagRules: ['strayBackTicks']
+        })
+
+        const output4 = xss(inputHTML.innerHTML, {
+            outputType: 'html',
+            allowTags: ['script'],
+            allowTagRules: ['strayBackTicks']
+        })
+
+        const output5 = xss(inputHTML.innerHTML, {
+            outputType: 'html',
+            allowTags: ['script'],
+            allowTagRules: ['strayBackTicks']
+        })
+        document.body.append('beforeend', ...output1)
+        document.body.append('beforeend', ...output2)
+        document.body.append('beforeend', ...output3)
+        document.body.append('beforeend', ...output4)
+        document.body.append('beforeend', ...output5)
     </script>
 </body>
 </html>
