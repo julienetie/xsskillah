@@ -51,7 +51,7 @@ const vulnerableTags = [
   'frameset'
 ]
 
-const xsskillah = (globalOptions = {}) => (inputMarkup, instanceOptions) => {
+const xssKillah = (globalOptions = {}) => (inputMarkup, instanceOptions) => {
  /*
   xssDocReset determines when xssKillah should remove the sandbox elements after usage. This is to improve performance.
   Larger inputs may benefit from more frequent resets. Frequent inputs may benefit from infrequent resets. 
@@ -153,4 +153,4 @@ const xsskillah = (globalOptions = {}) => (inputMarkup, instanceOptions) => {
   return sandbox.childNodes
 }
 
-export default xsskillah
+export default xssKillah

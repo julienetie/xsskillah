@@ -42,11 +42,11 @@
 
 
     <script type="module">
-        import xsskillah from './src/xsskillah.js'
+        import xssKillah from './src/xsskillah.js'
 
         const inputHTML = document.querySelector('template')
 
-        const xss = xsskillah()
+        const xss = xssKillah()
 
         const output1 = xss(inputHTML.innerHTML, {
             outputType: 'html',
