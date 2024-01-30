@@ -1,4 +1,7 @@
 # XssKillah (Work in Progress)
+<img src="https://github.com/julienetie/xsskillah/assets/7676299/f50a774f-0ebd-4687-8a76-375c7136cc44" width="370">
+
+
 
 ## A Fast Minimal DOM-based HTML Sanitizer
 
@@ -25,6 +28,9 @@ In theory, there are no restrictions on what can be rendered. XssKillah is an op
 ### API
 
 The API details are still a work in progress and will be announced soon.
+
+### credits
+- Art by [超恶男子](https://pngtree.com/%E8%B6%85%E6%81%B6%E7%94%B7%E5%AD%90_28086239?type=1)
 
 ### License
 
