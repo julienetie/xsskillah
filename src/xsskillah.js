@@ -83,7 +83,7 @@ const xssKillah = (globalOptions = {}) => (inputMarkup, instanceOptions) => {
 
   // Vulnerable tags are ignored by default unless overriden by the global options or an instance option.
   const vulnerableTagsFiltered = vulnerableTags.filter(tag => !(allowTags).includes(tag))
-
+  
   // Remove filtered vulnerable tags
   vulnerableTagsFiltered.forEach(tag => {
     const tags = sandbox.querySelectorAll(tag)
