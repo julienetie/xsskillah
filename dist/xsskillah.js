@@ -1,27 +1,29 @@
+const sandboxes = new Set();
+
+
 const globalDefaults = {
-  allowTags: [], // Allow dangerous tags
-  allowTagRules: [] // Allow dangerous tag rules
-  /*
-          - inputTypeJS           ->      Allow inputMarkup type to be text/javascript
-          - formAction            ->      Allow form ation attribute
-          - strayDoubleQuotes     ->      Allow stray double quotes
-          - straySingleQuotes     ->      Allow stray single quotes
-          - strayBackTicks        ->      Allow stray back ticks
-      */
+  allowTags: [],      // Allow dangerous tags
+  allowTagRules: [],  // Allow dangerous tag rules
+  xssDocReset: 8
+  //        - inputTypeJS           ->      Allow inputMarkup type to be text/javascript
+  //        - formAction            ->      Allow form ation attribute
+  //        - strayDoubleQuotes     ->      Allow stray double quotes
+  //        - straySingleQuotes     ->      Allow stray single quotes
+  //        - strayBackTicks        ->      Allow stray back ticks
 };
 
-const doc = document.implementation.createHTMLDocument();
 
-/*
-Taken from Angular
-- https://github.com/angular/angular/blob/bbbe477f479f20722f0fea7ccc46095aad5d4253/packages/core/src/sanitization/url_sanitizer.ts#L38
-*/
+// xssDoc is repurposed
+const xssDoc = document.implementation.createHTMLDocument();
+
+
+// Taken from Angular
+// - https://github.com/angular/angular/blob/bbbe477f479f20722f0fea7ccc46095aad5d4253/packages/core/src/sanitization/url_sanitizer.ts#L38
 const SAFE_URL_PATTERN = /^(?!javascript:)(?:[a-z0-9+.-]+:|[^&:\/?#]*(?:[\/?#]|$))/i; // eslint-disable-line
 
-/*
-Taken from Angular
-- https://github.com/angular/angular/blob/bbbe477f479f20722f0fea7ccc46095aad5d4253/packages/core/src/sanitization/url_sanitizer.ts#L39
-*/
+
+// Taken from Angular
+// - https://github.com/angular/angular/blob/bbbe477f479f20722f0fea7ccc46095aad5d4253/packages/core/src/sanitization/url_sanitizer.ts#L39
 const sanitizeUrl = url => {
   url = String(url);
   return url.match(SAFE_URL_PATTERN) ? url : 'unsafe:' + url
@@ -45,14 +47,31 @@ const vulnerableTags = [
   'frameset'
 ];
 
-const xsskillah = (inputMarkup, instanceOptions, globalOptions) => {
-  const treeWalker = document.createTreeWalker(doc.body, NodeFilter.SHOW_ELEMENT);
+const xssKillah = (globalOptions = {}) => (inputMarkup, instanceOptions) => {
+
+  // xssDocReset determines when xssKillah should remove the sandbox elements after usage. This is to improve performance.
+  // Larger inputs may benefit from more frequent resets. Frequent inputs may benefit from infrequent resets. 
+  {
+    const xssDocReset = Object.hasOwn(globalOptions, 'xssDocReset') ? globalOptions.xssDocReset : globalDefaults.xssDocReset;
+    if (sandboxes.size === xssDocReset) {
+      for (const sandboxRef of sandboxes) {
+        const sandbox = sandboxRef.deref();
+        sandbox.remove();
+      }
+      sandboxes.clear();
+    }
+  }
+  const treeWalker = document.createTreeWalker(xssDoc.body, NodeFilter.SHOW_ELEMENT);
   const allowTagRulesObj = {};
   const ignoreNodes = [];
   let node;
 
-  // Put html in doc
-  doc.body.innerHTML = inputMarkup;
+  const sandbox = document.createElement('div');
+  xssDoc.body.appendChild(sandbox);
+  sandbox.innerHTML = inputMarkup;
+  const sandboxRef = new WeakRef(sandbox);
+  sandboxes.add(sandboxRef);
+
 
   // Instance Options > Global Options > Global Defaults.
   const allowTags = instanceOptions?.allowTags || globalOptions?.allowTags || globalDefaults.allowTags;
@@ -66,7 +85,7 @@ const xsskillah = (inputMarkup, instanceOptions, globalOptions) => {
 
   // Remove filtered vulnerable tags
   vulnerableTagsFiltered.forEach(tag => {
-    const tags = doc.body.querySelectorAll(tag);
+    const tags = sandbox.querySelectorAll(tag);
     tags.forEach(t => t.remove());
   });
 
@@ -125,7 +144,25 @@ const xsskillah = (inputMarkup, instanceOptions, globalOptions) => {
     }
   }
 
-  return doc.body
+  return sandbox.childNodes
 };
 
-export { xsskillah as default };
+// Script tags rendered to the DOM will be inactive.
+// To activate a script tag it needs to
+// - Have a unique selector
+// - Have a tagName of SCRIPT
+// This protects makeAlive from making unintended script active.
+xssKillah.makeAlive = (selector, parentSelector = document) => {
+  const scripts = parentSelector.querySelectorAll(selector);
+  const inactiveScript = scripts[0];
+  if (scripts.length > 1 || inactiveScript.tagName !== 'SCRIPT') {
+    console.warn('makeAlive requires a unique selector');
+    return
+  }
+
+  const newScript = document.createElement('script');
+  newScript.textContent = inactiveScript.textContent;
+  inactiveScript.replaceWith(newScript);
+};
+
+export { xssKillah as default };
