@@ -19,11 +19,37 @@ XssKillah is a lightweight and fast HTML sanitizer designed for securing compone
 
 ### Philosophy
 
-XssKillah follows a highly opinionated approach by disallowing as many vulnerable tags and attributes as possible. This minimalistic design keeps XssKillah small, ensuring fast performance. It offers clarity, allowing you to understand the risks as you enable specific features.
+XssKillah follows a highly opinionated approach by justifiably disallowing vulnerable tags and attributes that fall outside of common working scopes.
+This minimalistic design keeps XssKillah small, ensuring fast performance. It offers clarity, allowing you to understand the risks as you enable specific features.
+
+#### Filtered tags
+By default, the following tags are ignored and should be explicitly opted-in, preferably at a component level using the allowTags option.
+- script
+- iframe
+- object
+- embed
+- meta
+- base
+- style
+- canvas
+- link
+- marquee
+- applet
+- frame
+- frameset
+
+#### Inactive Scripts
+Scripts are inactive by default, but can be made active in a safe manner by the use of `xssKillah.makeAlive()`. _(script needs to be included using allowTags)_
+
+
+#### Text Nodes
+Escaping is not necessary since text is written to the sandbox DOM first. Consequently, XssKillah only requires processing of element tags and their content enclosed within.
+
+#### Iframes
+The iframe src atttribute is sanitized. The implementor (You or your team) are responsible for ensuring the source of the iframe is trustworthy.
 
 ### Restrictions
-
-In theory, there are no restrictions on what can be rendered. XssKillah is an opt-in sanitizer, meaning that rendered script tags will not execute unless explicitly allowed.
+In theory, there are no restrictions on what can be rendered. XssKillah is an opt-in sanitizer.
 
 ### API
 
