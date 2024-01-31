@@ -1,6 +1,6 @@
 {
   "name": "xsskillah",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Fast Minimal HTML Sanitizer for the Web",
   "main": "./dist/xsskillah.js",
   "type": "module",

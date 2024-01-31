@@ -49,7 +49,7 @@ const createCJS = async () => {
     const bundle = await rollup(inputOptions)
     const output = await bundle.generate(outputOptions)
     const { code } = output.output[0]
-    console.log('bundle', code)
+
     const data = code
     // const data = await fs.readFile(paths.source, 'utf8')
     // const tsDefData = await fs.readFile(paths.sourceTSdef, 'utf8')
