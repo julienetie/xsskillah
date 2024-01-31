@@ -12,6 +12,10 @@
     <template>
         <div class="some-class" id="abc" style="color:red;" onload="alert(1)">
             <h1>TEST</h1>
+            <custom-element>
+                console.log('SCRIPT I WANT')
+            </custom-element>
+
             <script>
                 alert(2)
             </script>
@@ -45,6 +49,7 @@
         import xssKillah from './src/xsskillah.js'
 
         const inputHTML = document.querySelector('template')
+        const inputHTML2InnerHTML = inputHTML.innerHTML.replace('<script', '<script id="unqiue"')
 
         const xss = xssKillah()
 
@@ -54,7 +59,7 @@
             allowTagRules: ['strayBackTicks']
         })
 
-        const output2 = xss(inputHTML.innerHTML, {
+        const output2 = xss(inputHTML2InnerHTML, {
             outputType: 'html',
             allowTags: ['script'],
             allowTagRules: ['strayBackTicks']
@@ -82,6 +87,9 @@
         document.body.append('beforeend', ...output3)
         document.body.append('beforeend', ...output4)
         document.body.append('beforeend', ...output5)
+
+        // Make script alive 
+        // xssKillah.makeAlive('#unqiue')
     </script>
 </body>
 </html>
