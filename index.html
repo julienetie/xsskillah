@@ -20,6 +20,16 @@
                 alert(2)
             </script>
 
+            <div class="style-1 style-2">
+                <span class="style3 style-4 style-5">
+                    <div class="style-2">
+                    </div>
+                </span>
+                <div class="Style-1 style-5">
+
+                </div>
+            </div>
+
             <input type="textjavascript" value="YO TEST 123" >
 
             <form action="balbla.php">
@@ -56,7 +66,8 @@
         const output1 = xss(inputHTML.innerHTML, {
             outputType: 'html',
             allowTags: ['script'],
-            allowTagRules: ['strayBackTicks']
+            allowTagRules: ['strayBackTicks'],
+            excludeClass: ['style-2', 'style-5'],
         })
 
         const output2 = xss(inputHTML2InnerHTML, {
